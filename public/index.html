@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Server</title>
+</head>
+<body>
+  <h1>Welcome to the Demo Server!</h1>
+  <form id="demo-form">
+    <label for="input">Enter something:</label>
+    <input type="text" id="input" name="input" required>
+    <button type="submit">Submit</button>
+  </form>
+  <p id="response"></p>
+
+  <script>
+    document.getElementById('demo-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('input').value;
+
+      // Send input to the server and fetch the response
+      try {
+        const response = await fetch('/api/reverse', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ input }),
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+          document.getElementById('response').textContent = `Reversed: ${result.reversed}`;
+        } else {
+          document.getElementById('response').textContent = `Error: ${result.error}`;
+        }
+      } catch (err) {
+        document.getElementById('response').textContent = 'An error occurred while contacting the server.';
+      }
+    });
+  </script>
+</body>
+</html>
